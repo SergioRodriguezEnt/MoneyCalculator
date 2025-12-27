@@ -49,7 +49,9 @@ public class WebServiceLoader implements CurrencyLoader, ExchangeRateLoader {
     }
 
     private JsonObject jsonFrom(String urlString) throws IOException {
-        return new Gson().fromJson(new String(URI.create(urlString).toURL().openStream().readAllBytes()), JsonObject.class);
+        try(InputStream is = URI.create(urlString).toURL().openStream()) {
+            return new Gson().fromJson(new String(is.readAllBytes()), JsonObject.class);
+        }
     }
 
     @Override

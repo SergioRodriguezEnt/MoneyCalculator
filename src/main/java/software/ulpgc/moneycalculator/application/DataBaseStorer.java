@@ -4,10 +4,7 @@ import software.ulpgc.moneycalculator.architecture.io.Storer;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +22,7 @@ public class DataBaseStorer extends Storer {
         connection.createStatement().execute("CREATE TABLE IF NOT EXISTS currencies (code TEXT PRIMARY KEY, name TEXT)");
         connection.createStatement().execute("CREATE TABLE IF NOT EXISTS " +
                 "exchangeRates (date DATE, fromCode TEXT, toCode TEXT, rate REAL, " +
+                "PRIMARY KEY (date, fromCode, toCode), " +
                 "FOREIGN KEY (fromCode) REFERENCES currencies(code), FOREIGN KEY (toCode) REFERENCES currencies(code))");
     }
 
@@ -101,16 +99,46 @@ public class DataBaseStorer extends Storer {
 
     @Override
     public ExchangeRate load(Currency from, Currency to, LocalDate date) {
-        return null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT rate FROM exchangeRates WHERE date=? AND fromCode=? AND toCode=?");
+            statement.setDate(1, Date.valueOf(date));
+            statement.setString(2, from.code());
+            statement.setString(3, to.code());
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return new ExchangeRate(date, from, to, result.getDouble(1));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return new ExchangeRate(date, from, to, 1);
+        }
     }
 
     @Override
     public void save(ExchangeRate exchangeRate) {
-
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO exchangeRates (date, fromCode, toCode, rate) VALUES (?, ?, ?, ?)");
+            statement.setDate(1, Date.valueOf(exchangeRate.date()));
+            statement.setString(2, exchangeRate.from().code());
+            statement.setString(3, exchangeRate.to().code());
+            statement.setDouble(4, exchangeRate.rate());
+            statement.execute();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
     public boolean hasExchangeRate(Currency from, Currency to, LocalDate date) {
-        return false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT rate FROM exchangeRates WHERE date=? AND fromCode=? AND toCode=?");
+            statement.setDate(1, Date.valueOf(date));
+            statement.setString(2, from.code());
+            statement.setString(3, to.code());
+            ResultSet result = statement.executeQuery();
+            return result.next();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
     }
 }

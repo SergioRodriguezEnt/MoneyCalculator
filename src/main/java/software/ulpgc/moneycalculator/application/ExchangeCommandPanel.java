@@ -8,6 +8,8 @@ import software.ulpgc.moneycalculator.architecture.model.Money;
 import software.ulpgc.moneycalculator.architecture.ui.CommandPanel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -22,6 +24,7 @@ public class ExchangeCommandPanel extends CommandPanel {
     private final JCalendar dateSelectorCalendar;
     private final JTextField moneyOutputField;
     private final List<Currency> currencies;
+    private final ExchangeMoneyCommand command;
 
     public ExchangeCommandPanel(Storer storer) {
         super(storer);
@@ -40,7 +43,7 @@ public class ExchangeCommandPanel extends CommandPanel {
         moneyOutputField = moneyOutputField();
         this.add(moneyOutputField);
 
-        ExchangeMoneyCommand command = new ExchangeMoneyCommand(this::inputMoney,
+        command = new ExchangeMoneyCommand(this::inputMoney,
                 this::selectedDate,
                 this::outputCurrency,
                 this::showOutputMoney,
@@ -58,7 +61,11 @@ public class ExchangeCommandPanel extends CommandPanel {
     }
 
     private LocalDate selectedDate() {
-        return LocalDate.ofInstant(dateSelectorCalendar.getDate().toInstant(), ZoneOffset.UTC);
+        LocalDate selectedDate =  LocalDate.ofInstant(dateSelectorCalendar.getDate().toInstant(), ZoneOffset.UTC);
+        if (!selectedDate.isBefore(LocalDate.now())) {
+            selectedDate = LocalDate.now().minusDays(1);
+        }
+        return selectedDate;
     }
 
     private Money inputMoney() {
@@ -85,6 +92,22 @@ public class ExchangeCommandPanel extends CommandPanel {
         JTextField field = new JTextField("100");
         field.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         field.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        field.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                command.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                command.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                command.execute();
+            }
+        });
         return field;
     }
 

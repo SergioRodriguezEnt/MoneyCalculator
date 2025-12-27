@@ -95,4 +95,14 @@ public class Desktop extends JFrame {
         return button;
     }
 
+    private Runnable onClose;
+    public void onClose(Runnable func) {
+        this.onClose = func;
+    }
+
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        onClose.run();
+    }
 }

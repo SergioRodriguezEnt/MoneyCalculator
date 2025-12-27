@@ -8,5 +8,5 @@ public abstract class CommandPanel extends JPanel {
     protected final Storer storer;
     public CommandPanel(Storer storer) {
         this.storer = storer;
-    };
+    }
 }
