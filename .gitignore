@@ -6,7 +6,7 @@ target/
 .jar
 .class
 .keys
-.db
+*.db
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
