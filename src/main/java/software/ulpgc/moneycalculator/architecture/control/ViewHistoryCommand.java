@@ -1,5 +1,6 @@
 package software.ulpgc.moneycalculator.architecture.control;
 
+import software.ulpgc.moneycalculator.architecture.exceptions.RequestAmmountException;
 import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.DateGranularity;
@@ -19,21 +20,22 @@ public record ViewHistoryCommand(Supplier<Currency> fromCurrencySupplier,
                                  ExchangeRateLoader exchangeRateLoader) implements Command {
 
     @Override
-    public void execute() {
-        Stream<LocalDate> dates = dateRangeStream(dateSupplier.get(), LocalDate.now().minusDays(1), dateGranularitySupplier.get());
-        historicConsumer.accept(dates.map(this::exchangeRateFrom).toList(), dateGranularitySupplier.get());
+    public void execute() throws RequestAmmountException {
+        List<LocalDate> dates = dateRange(dateSupplier.get(), LocalDate.now().minusDays(1), dateGranularitySupplier.get());
+        if (dates.size() > 10) throw new RequestAmmountException("Can not request for more than 10 timepoints.");
+        historicConsumer.accept(dates.stream().map(this::exchangeRateFrom).toList(), dateGranularitySupplier.get());
     }
 
-    private Stream<LocalDate> dateRangeStream(LocalDate from, LocalDate to, DateGranularity granularity) {
+    private List<LocalDate> dateRange(LocalDate from, LocalDate to, DateGranularity granularity) {
         from = normalize(from, granularity);
         LocalDate finalTo = normalize(to, granularity);
 
         if (from.isAfter(finalTo)) {
-            return Stream.empty();
+            return List.of();
         }
         return Stream.iterate(from,
                 date -> !date.isAfter(finalTo),
-                date -> increment(date, granularity));
+                date -> increment(date, granularity)).toList();
     }
 
     private LocalDate normalize(LocalDate date, DateGranularity granularity) {

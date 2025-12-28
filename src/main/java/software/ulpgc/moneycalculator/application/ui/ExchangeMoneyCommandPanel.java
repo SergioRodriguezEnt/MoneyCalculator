@@ -21,19 +21,20 @@ public class ExchangeMoneyCommandPanel extends CommandPanel {
     public ExchangeMoneyCommandPanel(Storer storer) {
         super(storer);
         List<Currency> currencies = storer.loadAll();
-        
-        this.setLayout(new FlowLayout());
 
-        fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        this.add(fromSupplierBox);
-        moneyInputField = moneyInputField();
-        this.add(moneyInputField);
+        setLayout(new BorderLayout());
         DateSupplierCalendar dateSupplierCalendar = new DateSupplierCalendar();
-        this.add(dateSupplierCalendar);
+        this.add(dateSupplierCalendar, BorderLayout.NORTH);
+        JPanel midPanel = new JPanel(new GridBagLayout());
+        this.add(new JPanel(new BorderLayout()).add(midPanel), BorderLayout.CENTER);
+        fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+        midPanel.add(fromSupplierBox);
+        moneyInputField = moneyInputField();
+        midPanel.add(moneyInputField);
         SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        this.add(toSupplierBox);
+        midPanel.add(toSupplierBox);
         moneyOutputField = moneyOutputField();
-        this.add(moneyOutputField);
+        midPanel.add(moneyOutputField);
 
         command = new ExchangeMoneyCommand(this::inputMoney,
                 dateSupplierCalendar,
@@ -45,11 +46,20 @@ public class ExchangeMoneyCommandPanel extends CommandPanel {
     }
 
     private void showOutputMoney(Money money) {
-        moneyOutputField.setText(Double.toString(money.amount()));
+        moneyOutputField.setText(Double.toString(Math.round(money.amount()*1000)/1000.0));
+        updateSize(moneyOutputField);
+    }
+
+    private void updateSize(JTextField textField) {
+        int newWidth = (textField.getText().length() * 10)+10;
+        textField.setPreferredSize(new Dimension(Math.min(newWidth, 300), textField.getPreferredSize().height));
+        revalidate();
     }
 
     private Money inputMoney() {
-        return new Money(Double.parseDouble(moneyInputField.getText()), fromSupplierBox.get());
+        String moneyInput = moneyInputField.getText().replace(" ", "").replace(",", ".");
+        if (moneyInput.isBlank()) {return new Money(0.0, fromSupplierBox.get());}
+        return new Money(Double.parseDouble(moneyInput), fromSupplierBox.get());
     }
 
     private JTextField moneyOutputField() {

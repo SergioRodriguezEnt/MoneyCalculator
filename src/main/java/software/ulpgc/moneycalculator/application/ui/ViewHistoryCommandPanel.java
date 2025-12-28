@@ -26,21 +26,28 @@ public class ViewHistoryCommandPanel extends CommandPanel {
         super(storer);
         List<Currency> currencies = storer.loadAll();
 
-        this.setLayout(new FlowLayout());
-
-        SupplierBox<Currency> fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        this.add(fromSupplierBox);
+        this.setLayout(new BorderLayout());
         DateSupplierCalendar dateSupplierCalendar = new DateSupplierCalendar();
-        this.add(dateSupplierCalendar);
-        SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        this.add(toSupplierBox);
-        SupplierBox<DateGranularity> dateGranularityBox = SupplierBox.with(Arrays.asList(DateGranularity.values()), new Font("Segos UI", Font.PLAIN, 12));
-        this.add(dateGranularityBox);
+        this.add(dateSupplierCalendar,  BorderLayout.NORTH);
 
-        this.add(viewChartButton());
+        JPanel bufferPanel = new JPanel(new BorderLayout());
+        this.add(bufferPanel, BorderLayout.CENTER);
+
+        JPanel midPanel = new JPanel(new GridBagLayout());
+        bufferPanel.add(midPanel, BorderLayout.NORTH);
+        SupplierBox<Currency> fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+        midPanel.add(fromSupplierBox);
+        SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+        midPanel.add(toSupplierBox);
+        SupplierBox<DateGranularity> dateGranularityBox = SupplierBox.with(Arrays.asList(DateGranularity.values()), new Font("Segos UI", Font.PLAIN, 12));
+        midPanel.add(dateGranularityBox);
+
+        JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonWrapper.add(viewChartButton());
+        bufferPanel.add(buttonWrapper, BorderLayout.CENTER);
 
         chartPanel = new JPanel(new BorderLayout());
-        this.add(chartPanel, BorderLayout.SOUTH);
+        bufferPanel.add(chartPanel, BorderLayout.SOUTH);
 
         command = new ViewHistoryCommand(fromSupplierBox,
                 dateSupplierCalendar,
@@ -49,12 +56,21 @@ public class ViewHistoryCommandPanel extends CommandPanel {
                 this::showHistory,
                 storer);
 
-        command.execute();
+        showChart();
+    }
+
+    public void showChart() {
+        try {
+            command.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(chartPanel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JButton viewChartButton() {
         JButton button = new JButton("View");
-        button.addActionListener(_ -> command.execute());
+        button.addActionListener(_ -> showChart());
         return button;
     }
 
@@ -63,6 +79,7 @@ public class ViewHistoryCommandPanel extends CommandPanel {
         NumberAxis rangeAxis = (NumberAxis) chart.getXYPlot().getRangeAxis();
         rangeAxis.setAutoRange(true);
         rangeAxis.setAutoRangeIncludesZero(false);
+        FlatMacLightLafChartTheme.apply(chart);
         chartPanel.removeAll();
         ChartPanel cPanel = new ChartPanel(chart);
         cPanel.setPreferredSize(new Dimension(400, 400));

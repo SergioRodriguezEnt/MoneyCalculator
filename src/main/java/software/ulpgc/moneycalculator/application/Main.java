@@ -1,5 +1,6 @@
 package software.ulpgc.moneycalculator.application;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import software.ulpgc.moneycalculator.application.io.DataBaseStorer;
 import software.ulpgc.moneycalculator.application.ui.Desktop;
 import software.ulpgc.moneycalculator.application.ui.ExchangeMoneyCommandPanel;
@@ -7,12 +8,23 @@ import software.ulpgc.moneycalculator.application.ui.ViewHistoryCommandPanel;
 import software.ulpgc.moneycalculator.architecture.io.Store;
 import software.ulpgc.moneycalculator.application.io.WebServiceLoader;
 
+
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Main {
     static void main() {
+        FlatMacLightLaf.setup();
+
+        UIManager.put("Button.arc", 10);
+        UIManager.put("Component.arc", 10);
+
+        UIManager.put("Component.focusColor", Color.decode("#0A84FF"));
+        UIManager.put("Component.focusWidth", 1);
+
         Desktop desktop = new Desktop();
         WebServiceLoader webServiceLoader = new WebServiceLoader();
         try {
