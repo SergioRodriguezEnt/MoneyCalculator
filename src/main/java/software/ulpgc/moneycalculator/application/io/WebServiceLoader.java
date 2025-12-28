@@ -1,4 +1,4 @@
-package software.ulpgc.moneycalculator.application;
+package software.ulpgc.moneycalculator.application.io;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

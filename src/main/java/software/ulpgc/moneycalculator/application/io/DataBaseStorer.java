@@ -1,4 +1,4 @@
-package software.ulpgc.moneycalculator.application;
+package software.ulpgc.moneycalculator.application.io;
 
 import software.ulpgc.moneycalculator.architecture.io.Storer;
 import software.ulpgc.moneycalculator.architecture.model.Currency;

@@ -1,6 +1,4 @@
-package software.ulpgc.moneycalculator.application;
-
-import software.ulpgc.moneycalculator.architecture.ui.CommandPanel;
+package software.ulpgc.moneycalculator.application.ui;
 
 import javax.swing.*;
 import java.awt.*;

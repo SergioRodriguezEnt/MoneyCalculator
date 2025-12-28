@@ -1,8 +1,5 @@
-package software.ulpgc.moneycalculator.application;
+package software.ulpgc.moneycalculator.architecture.io;
 
-import software.ulpgc.moneycalculator.architecture.io.CurrencyLoader;
-import software.ulpgc.moneycalculator.architecture.io.ExchangeRateLoader;
-import software.ulpgc.moneycalculator.architecture.io.Storer;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
 import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 

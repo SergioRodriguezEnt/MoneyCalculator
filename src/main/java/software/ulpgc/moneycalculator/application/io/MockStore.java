@@ -1,4 +1,4 @@
-package software.ulpgc.moneycalculator.application;
+package software.ulpgc.moneycalculator.application.io;
 
 import software.ulpgc.moneycalculator.architecture.io.Storer;
 import software.ulpgc.moneycalculator.architecture.model.Currency;
@@ -7,6 +7,7 @@ import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 import java.time.LocalDate;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class MockStore extends Storer {
     @Override
     public List<Currency> loadAll() {
