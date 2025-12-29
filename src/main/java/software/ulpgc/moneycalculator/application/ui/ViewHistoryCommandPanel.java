@@ -14,6 +14,7 @@ import software.ulpgc.moneycalculator.architecture.model.ExchangeRate;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.ToIntFunction;
@@ -76,10 +77,14 @@ public class ViewHistoryCommandPanel extends CommandPanel {
 
     private void showHistory(List<ExchangeRate> exchangeRates, DateGranularity granularity) {
         JFreeChart chart = ChartFactory.createXYLineChart("Chart", "time", "rate", collectionFrom(exchangeRates, granularity));
+        FlatMacLightLafChartTheme.apply(chart);
+        NumberAxis domainAxis = (NumberAxis) chart.getXYPlot().getDomainAxis();
+        domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        domainAxis.setNumberFormatOverride(DecimalFormat.getIntegerInstance());
         NumberAxis rangeAxis = (NumberAxis) chart.getXYPlot().getRangeAxis();
         rangeAxis.setAutoRange(true);
         rangeAxis.setAutoRangeIncludesZero(false);
-        FlatMacLightLafChartTheme.apply(chart);
+        rangeAxis.setNumberFormatOverride(new DecimalFormat("0.####"));
         chartPanel.removeAll();
         ChartPanel cPanel = new ChartPanel(chart);
         cPanel.setPreferredSize(new Dimension(400, 400));
