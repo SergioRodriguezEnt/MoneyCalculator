@@ -7,3 +7,4 @@
 ## Nota importante al ejecutar el proyecto
 En la carpeta resources(/src/main/resources), se debe crear un archivo llamado **.keys** que contenga la clave de la API.<br>
 Esta clave se puede obtener de manera gratuita en https://freecurrencyapi.com
+Tambien es importante aclarar que el sistema devolvera un valor de cambio de 1 en el caso de que no encuentre un valor, y las fechas son limitadas a aquellas posteriores al 2000

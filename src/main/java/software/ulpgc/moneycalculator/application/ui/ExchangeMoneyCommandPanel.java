@@ -42,6 +42,9 @@ public class ExchangeMoneyCommandPanel extends CommandPanel {
                 this::showOutputMoney,
                 storer);
 
+        dateSupplierCalendar.addPropertyChangeListener("calendar", _ -> command.execute());
+        fromSupplierBox.addActionListener(_ -> command.execute());
+        toSupplierBox.addActionListener(_ -> command.execute());
         command.execute();
     }
 

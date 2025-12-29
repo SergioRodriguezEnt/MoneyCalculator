@@ -76,7 +76,7 @@ public class ViewHistoryCommandPanel extends CommandPanel {
     }
 
     private void showHistory(List<ExchangeRate> exchangeRates, DateGranularity granularity) {
-        JFreeChart chart = ChartFactory.createXYLineChart("Chart", "time", "rate", collectionFrom(exchangeRates, granularity));
+        JFreeChart chart = ChartFactory.createXYLineChart("", "Time", "Exchange Rate", collectionFrom(exchangeRates, granularity));
         FlatMacLightLafChartTheme.apply(chart);
         NumberAxis domainAxis = (NumberAxis) chart.getXYPlot().getDomainAxis();
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
@@ -100,7 +100,7 @@ public class ViewHistoryCommandPanel extends CommandPanel {
     }
 
     private XYSeries seriesFrom(List<ExchangeRate> exchangeRates, DateGranularity granularity) {
-        XYSeries series = new XYSeries("x");
+        XYSeries series = new XYSeries("exchange rate");
         ToIntFunction<ExchangeRate> timeOf = serializer(granularity);
         exchangeRates.forEach(exchangeRate -> {
             series.add(timeOf.applyAsInt(exchangeRate), exchangeRate.rate());
