@@ -12,7 +12,6 @@ public class FlatMacLightLafChartTheme {
     private static final Color ACCENT_GREEN = Color.decode("#34C759");
     private static final Color ACCENT_ORANGE = Color.decode("#FF9F0A");
 
-    // Neutral colors
     private static final Color BACKGROUND_LIGHT_GRAY = Color.decode("#F5F5F7");
     private static final Color PLOT_BACKGROUND_WHITE = Color.WHITE;
     private static final Color GRIDLINE_GRAY = Color.decode("#D1D1D6");
@@ -23,28 +22,31 @@ public class FlatMacLightLafChartTheme {
     private static final Font DEFAULT_FONT = new Font("Inter", Font.PLAIN, 12);
     private static final Font TITLE_FONT = new Font("Inter", Font.BOLD, 14);
 
-    /**
-     * Apply FlatMacLightLaf theme to the given chart.
-     *
-     * @param chart JFreeChart instance
-     */
     public static void apply(JFreeChart chart) {
         if (chart == null) return;
 
-        // Chart background
         chart.setBackgroundPaint(BACKGROUND_LIGHT_GRAY);
+
         if (chart.getTitle() != null) {
             chart.getTitle().setPaint(TEXT_PRIMARY);
             chart.getTitle().setFont(TITLE_FONT);
         }
 
-        XYPlot plot = chart.getXYPlot();
+        setGeneralStyleFor(chart.getXYPlot());
+
+        setAxesStylesFor(chart.getXYPlot());
+
+        changeRendererFor(chart.getXYPlot());
+    }
+
+    private static void setGeneralStyleFor(XYPlot plot) {
         plot.setBackgroundPaint(PLOT_BACKGROUND_WHITE);
         plot.setDomainGridlinePaint(GRIDLINE_GRAY);
         plot.setRangeGridlinePaint(GRIDLINE_GRAY);
         plot.setOutlinePaint(AXIS_LINE_GRAY);
+    }
 
-        // Axes
+    private static void setAxesStylesFor(XYPlot plot) {
         ValueAxis domainAxis = plot.getDomainAxis();
         ValueAxis rangeAxis = plot.getRangeAxis();
         if (domainAxis != null) {
@@ -59,8 +61,9 @@ public class FlatMacLightLafChartTheme {
             rangeAxis.setLabelFont(DEFAULT_FONT);
             rangeAxis.setTickLabelFont(DEFAULT_FONT);
         }
+    }
 
-        // Renderer / series colors
+    private static void changeRendererFor(XYPlot plot) {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         int seriesCount = plot.getDataset() != null ? plot.getDataset().getSeriesCount() : 0;
         for (int i = 0; i < seriesCount; i++) {

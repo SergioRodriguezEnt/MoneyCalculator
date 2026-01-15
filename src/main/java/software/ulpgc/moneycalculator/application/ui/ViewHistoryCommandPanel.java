@@ -34,14 +34,15 @@ public class ViewHistoryCommandPanel extends CommandPanel {
         JPanel bufferPanel = new JPanel(new BorderLayout());
         this.add(bufferPanel, BorderLayout.CENTER);
 
-        JPanel midPanel = new JPanel(new GridBagLayout());
-        bufferPanel.add(midPanel, BorderLayout.NORTH);
         SupplierBox<Currency> fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        midPanel.add(fromSupplierBox);
         SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
-        midPanel.add(toSupplierBox);
         SupplierBox<DateGranularity> dateGranularityBox = SupplierBox.with(Arrays.asList(DateGranularity.values()), new Font("Segos UI", Font.PLAIN, 12));
-        midPanel.add(dateGranularityBox);
+
+        JPanel inputsPanel = new JPanel(new GridBagLayout());
+        inputsPanel.add(fromSupplierBox);
+        inputsPanel.add(toSupplierBox);
+        inputsPanel.add(dateGranularityBox);
+        bufferPanel.add(inputsPanel, BorderLayout.NORTH);
 
         JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonWrapper.add(viewChartButton());
@@ -78,6 +79,16 @@ public class ViewHistoryCommandPanel extends CommandPanel {
     private void showHistory(List<ExchangeRate> exchangeRates, DateGranularity granularity) {
         JFreeChart chart = ChartFactory.createXYLineChart("", "Time", "Exchange Rate", collectionFrom(exchangeRates, granularity));
         FlatMacLightLafChartTheme.apply(chart);
+        fixNumberingFor(chart);
+        ChartPanel cPanel = new ChartPanel(chart);
+        cPanel.setPreferredSize(new Dimension(400, 400));
+        chartPanel.removeAll();
+        chartPanel.add(cPanel, BorderLayout.CENTER);
+        chartPanel.revalidate();
+        chartPanel.repaint();
+    }
+
+    private static void fixNumberingFor(JFreeChart chart) {
         NumberAxis domainAxis = (NumberAxis) chart.getXYPlot().getDomainAxis();
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         domainAxis.setNumberFormatOverride(DecimalFormat.getIntegerInstance());
@@ -85,12 +96,6 @@ public class ViewHistoryCommandPanel extends CommandPanel {
         rangeAxis.setAutoRange(true);
         rangeAxis.setAutoRangeIncludesZero(false);
         rangeAxis.setNumberFormatOverride(new DecimalFormat("0.####"));
-        chartPanel.removeAll();
-        ChartPanel cPanel = new ChartPanel(chart);
-        cPanel.setPreferredSize(new Dimension(400, 400));
-        chartPanel.add(cPanel, BorderLayout.CENTER);
-        chartPanel.revalidate();
-        chartPanel.repaint();
     }
 
     private XYSeriesCollection collectionFrom(List<ExchangeRate> exchangeRates, DateGranularity granularity) {

@@ -14,7 +14,10 @@ public class DateSupplierCalendar extends JCalendar implements Supplier<LocalDat
 
     @Override
     public LocalDate get() {
-        LocalDate selectedDate =  LocalDate.ofInstant(this.getDate().toInstant(), ZoneOffset.UTC);
+        return normalize(LocalDate.ofInstant(this.getDate().toInstant(), ZoneOffset.UTC));
+    }
+
+    private static LocalDate normalize(LocalDate selectedDate) {
         if (!selectedDate.isBefore(LocalDate.now())) {
             selectedDate = LocalDate.now().minusDays(1);
         }

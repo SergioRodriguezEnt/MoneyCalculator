@@ -1,10 +1,75 @@
-# Money Calculator
-## Cambios con respecto al proyecto base
-- Se ha añadido una base de datos capaz de guardar datos usados por el programa
-- Se ha añadido un comando nuevo que muestra la evolución de un cambio de divisa en un período máximo de 10 unidades de tiempo(día, mes, año, década)
-- Se ha añadido un selector de fechas decente.
-- Se ha modificado la interfáz gráfica.
-## Nota importante al ejecutar el proyecto
-En la carpeta resources(/src/main/resources), se debe crear un archivo llamado **.keys** que contenga la clave de la API.<br>
-Esta clave se puede obtener de manera gratuita en https://freecurrencyapi.com
-Tambien es importante aclarar que el sistema devolvera un valor de cambio de 1 en el caso de que no encuentre un valor, y las fechas son limitadas a aquellas posteriores al 2000
+# 💰 Money Calculator
+
+Aplicación para el cálculo y análisis de cambios de divisa, con soporte para históricos, base de datos y una interfaz gráfica mejorada.
+
+---
+
+## ✨ Cambios respecto al proyecto base
+
+* 📊 Se ha añadido una **base de datos** capaz de almacenar los datos utilizados por el programa.
+* 📈 Se ha incorporado un **nuevo comando** que muestra la evolución del tipo de cambio de una divisa en un período máximo de **10 unidades de tiempo**:
+
+    * día
+    * mes
+    * año
+    * década
+* 📅 Se ha implementado un **selector de fechas mejorado** y más intuitivo.
+* 🖥️ Se ha modificado la **interfaz gráfica** para mejorar la experiencia de usuario.
+
+---
+
+## 🔑 Configuración de la API
+
+1. Accede a [https://freecurrencyapi.com](https://freecurrencyapi.com) y obtén una clave gratuita.
+
+2. Dentro de la carpeta:
+
+   ```
+   /src/main/resources
+   ```
+
+3. Crea un archivo llamado:
+
+   ```
+   .keys
+   ```
+
+4. Introduce tu clave de la API dentro del archivo (según el formato esperado por el proyecto).
+
+---
+
+## 🚀 Instalación y ejecución
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone <url-del-repositorio>
+   ```
+
+2. Accede al directorio del proyecto:
+
+   ```bash
+   cd money-calculator
+   ```
+
+3. Asegúrate de haber configurado correctamente el archivo `.keys`.
+
+4. Ejecuta el proyecto desde tu IDE o mediante el sistema de construcción correspondiente (por ejemplo, Maven o Gradle).
+
+---
+
+## ℹ️ Consideraciones importantes
+
+* Si el sistema **no encuentra un valor de cambio**, devolverá **1** por defecto.
+* Las fechas disponibles están limitadas a aquellas **posteriores al año 2000**.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+* SQLite
+* Gson
+* JCalendar
+* JFreeChart
+* FlatLaf
+* Free Currency API REST

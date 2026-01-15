@@ -25,15 +25,18 @@ public class ExchangeMoneyCommandPanel extends CommandPanel {
         setLayout(new BorderLayout());
         DateSupplierCalendar dateSupplierCalendar = new DateSupplierCalendar();
         this.add(dateSupplierCalendar, BorderLayout.NORTH);
+
+        fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+        moneyInputField = moneyInputField();
+        SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+        moneyOutputField = moneyOutputField();
+
         JPanel midPanel = new JPanel(new GridBagLayout());
         this.add(new JPanel(new BorderLayout()).add(midPanel), BorderLayout.CENTER);
-        fromSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
+
         midPanel.add(fromSupplierBox);
-        moneyInputField = moneyInputField();
         midPanel.add(moneyInputField);
-        SupplierBox<Currency> toSupplierBox = SupplierBox.with(currencies, new Font("Segos UI", Font.PLAIN, 12));
         midPanel.add(toSupplierBox);
-        moneyOutputField = moneyOutputField();
         midPanel.add(moneyOutputField);
 
         command = new ExchangeMoneyCommand(this::inputMoney,

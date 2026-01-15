@@ -10,8 +10,9 @@ public class SupplierBox<T> extends JComboBox<T> implements Supplier<T> {
         super(items);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> SupplierBox<T> with(List<T> items, Font font) {
-        @SuppressWarnings("unchecked") SupplierBox<T> box = new SupplierBox<>((T[])items.toArray());
+        SupplierBox<T> box = new SupplierBox<>((T[])items.toArray());
         box.setFont(font);
         return box;
     }
